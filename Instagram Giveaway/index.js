@@ -1,7 +1,6 @@
 const readline = require('node:readline');
 const fs = require('fs');
-const arr = [];
-
+const map = new Map();
 
 
 async function createArrofObjects() {
@@ -11,69 +10,59 @@ async function createArrofObjects() {
     }); 
       
     for await(const line of readInterface) {
-      const index = arr.indexOf(arr.find((user) => user.name === line));
-        if (index == -1) {
-          arr.push({
-            name: line,
-            count: 1,
-            num: fileNumber
-          })
-        }
-        else{
-          if (arr[index].num !== fileNumber) {
-            arr[index].count++;
-            arr[index].num == fileNumber
-          }
+      if (map.has(line))
+      {
+        element = map.get(line)
+        if (element.num !== fileNumber)
+        {
+          element.count++;
+          element.num = fileNumber;
         }
       }
+      else
+      {
+        map.set(line, {
+            count: 1,
+            num: fileNumber
+          });
+      }
+    }
   }
-  return arr;
+  return map;
 }
 
 
-async function uniqueValues(){
-  await createArrofObjects();
-  console.log(arr.length);
+async function uniqueValues(map){
+  return map.size;
 }
 
-async function existInAllFiles(){
-  await createArrofObjects();
+async function existInAllFiles(map){
   let counter = 0;
-  for (let i = 0; i < arr.length; i++) {
-    if (arr[i].count == 20) {
+  for (let val of map.values()) {
+    if (val.count == 20) {
       counter++;
     }
   }
-  console.log(counter);
+  return counter;
 }
 
-async function existInAtLeastTen(){
-  await createArrofObjects();
+
+
+async function existInAtLeastTen(map){
   let counter = 0;
-  for (let i = 0; i < arr.length; i++) {
-    if (arr[i].count >= 10) {
+  for (let val of map.values()) {
+    if (val.count >= 10) {
       counter++;
     }
   }
-  console.log(counter)
+  return counter;
 }
 
 
-async function testFunc() {
-  await createArrofObjects();
-  let counterInAll = 0;
-  let counterInAtLeastTen = 0;
-  for (let i = 0; i < arr.length; i++) {
-    if (arr[i].count == 20) {
-      counterInAll++;
-    }
-    if (arr[i].count >= 10) {
-      counterInAtLeastTen++;
-    }
-  }
-  console.log(`Amount of unique values = ${arr.length} `);
-  console.log(`Amount of values that are present in 20  = ${counterInAll} `);
-  console.log(`Amount of values that are present in at least 10  = ${counterInAtLeastTen} `);
-}
+(async function testFunc() {
+  const map = await createArrofObjects();
 
-testFunc();
+  console.log(`Amount of unique values = ${await uniqueValues(map)} `);
+  console.log(`Amount of values that are present in 20  = ${await existInAllFiles(map)} `);
+  console.log(`Amount of values that are present in at least 10  = ${await existInAtLeastTen(map)} `);
+})()
