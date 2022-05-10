@@ -1,5 +1,4 @@
 const fs = require('fs');
-const resData = [];
 const map = new Map();
 
 fs.readFile('../vacation/vacation.json', 'utf-8', (err, jsonString) => {
