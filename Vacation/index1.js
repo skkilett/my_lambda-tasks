@@ -1,7 +1,7 @@
 const fs = require('fs');
 const map = new Map();
 
-fs.readFile('../vacation/vacation.json', 'utf-8', (err, jsonString) => {
+fs.readFile('./vacation.json', 'utf-8', (err, jsonString) => {
   const data = JSON.parse(jsonString);
   for (let i = 0; i < data.length; i++) {
     const id = data[i]._id;
